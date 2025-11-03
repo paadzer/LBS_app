@@ -1,19 +1,32 @@
+# Import random number generator
 import random
+# Import Point geometry for creating spatial locations
 from django.contrib.gis.geos import Point
+# Import base command class for Django management commands
 from django.core.management.base import BaseCommand
+# Import our models
 from lbs_app.models import Business, BusinessCategory, ServiceArea
 
 
 class Command(BaseCommand):
+    """
+    Django management command to generate random businesses for testing
+    
+    This command creates sample business data across multiple cities and categories.
+    Usage: python manage.py generate_businesses --count 100
+    """
     help = 'Generate random businesses for testing'
 
     def add_arguments(self, parser):
+        # Add --count argument to specify how many businesses to create
         parser.add_argument('--count', type=int, default=100, help='Number of businesses to generate')
 
     def handle(self, *args, **options):
+        # Get the count from command line arguments
         count = options['count']
         
-        # Get or create categories
+        # Get or create the three main business categories
+        # These will be created if they don't exist, otherwise retrieved
         restaurant_category, _ = BusinessCategory.objects.get_or_create(
             slug='restaurant',
             defaults={'name': 'Restaurant', 'description': 'Dining establishments'}
@@ -27,9 +40,10 @@ class Command(BaseCommand):
             defaults={'name': 'Services', 'description': 'Professional services'}
         )
         
+        # List of all categories for random selection
         categories = [restaurant_category, retail_category, services_category]
         
-        # Major cities/locations with some randomness
+        # Define locations around the world where businesses will be created
         locations = [
             # Ireland - All counties with 5 businesses each
             {"name": "Dublin Restaurants", "lat": 53.3498, "lon": -6.2603, "count": 5, "country": "Ireland"},
@@ -66,36 +80,47 @@ class Command(BaseCommand):
             {"name": "Singapore Business", "lat": 1.3521, "lon": 103.8198, "count": 3, "country": "Singapore"},
         ]
         
+        # Dictionary of business name suffixes for each category
         business_names = {
             'restaurant': ['Cafe', 'Restaurant', 'Bistro', 'Pizzeria', 'Tavern', 'Pub', 'Bar', 'Diner', 'Eatery', 'Kitchen'],
             'retail': ['Store', 'Shop', 'Boutique', 'Market', 'Gallery', 'Emporium', 'Outlet', 'Mall', 'Bazaar', 'Mart'],
             'services': ['Tours', 'Guides', 'Services', 'Solutions', 'Consulting', 'Agency', 'Studio', 'Office', 'Center', 'Hub'],
         }
         
+        # Keep track of how many businesses we've created
         created = 0
+        
+        # Loop through each location and create businesses
         for loc in locations:
             for i in range(loc['count']):
+                # Randomly select a category
                 category = random.choice(categories)
+                # Get a random business name suffix for this category
                 name_prefix = random.choice(business_names[category.slug])
                 
-                # Add random offset to spread businesses around
+                # Add random offset to spread businesses around (prevent all at exact same location)
+                # 0.1 degrees ≈ 11km, so businesses are spread within ~11km of the center
                 lat = loc['lat'] + random.uniform(-0.1, 0.1)
                 lon = loc['lon'] + random.uniform(-0.1, 0.1)
                 
+                # Create the business with generated data
                 business = Business.objects.create(
                     name=f"{loc['name'].split()[0]} {name_prefix} {i+1}",
                     description=f"A local business in {loc['name']}",
                     category=category,
-                    location=Point(lon, lat),
+                    location=Point(lon, lat),  # Create a Point geometry for the location
                     phone=f"+{random.randint(100000000, 999999999)}",
                     email=f"info@{loc['name'].lower().replace(' ', '')}.com",
                 )
                 created += 1
                 
+                # Stop if we've reached the requested count
                 if created >= count:
                     break
             
+            # Stop outer loop if we've reached the requested count
             if created >= count:
                 break
         
+        # Display success message with count of created businesses
         self.stdout.write(self.style.SUCCESS(f'Successfully created {created} businesses'))

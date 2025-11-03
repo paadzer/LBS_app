@@ -1,89 +1,97 @@
+# Define a custom network for all services to communicate
 networks:
   lbs_network:
-    driver: bridge
-    ipam:
+    driver: bridge              # Use bridge networking
+    ipam:                       # IP Address Management
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.20.0.0/16  # Custom subnet for container IPs
 
+# Define all Docker services (containers)
 services:
+  # PostgreSQL database with PostGIS extension
   db:
-    image: postgis/postgis:15-3.3
+    image: postgis/postgis:15-3.3  # Use PostGIS image with PostgreSQL 15 and PostGIS 3.3
     container_name: lbs_postgres
     environment:
-      POSTGRES_DB: ${DB_NAME:-lbs_db}
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+      POSTGRES_DB: ${DB_NAME:-lbs_db}              # Database name from .env or default
+      POSTGRES_USER: ${DB_USER:-postgres}          # Database user from .env or default
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}  # Database password from .env or default
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"  # UTF8 encoding for database
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data    # Persistent storage for database
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Expose PostgreSQL port to host
     networks:
       lbs_network:
-        ipv4_address: 172.20.0.10
+        ipv4_address: 172.20.0.10  # Static IP for database service
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+      test: ["CMD-SHELL", "pg_isready -U postgres"]  # Check if database is ready
+      interval: 10s                                   # Check every 10 seconds
+      timeout: 5s                                     # Timeout after 5 seconds
+      retries: 5                                      # Retry 5 times before marking unhealthy
+    restart: unless-stopped  # Restart container unless manually stopped
 
+  # Django web application
   web:
-    build: .
+    build: .  # Build from Dockerfile in current directory
     container_name: lbs_django
+    # Run migrations, then start Gunicorn server
     command: sh -c "python manage.py migrate --noinput && gunicorn lbs_project.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/app
-      - static_volume:/app/staticfiles
+      - .:/app                # Mount current directory for development
+      - static_volume:/app/staticfiles  # Persistent volume for static files
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Expose Django on port 8000
     env_file:
-      - .env
+      - .env  # Load environment variables from .env file
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # Wait for database to be healthy before starting
     networks:
       lbs_network:
-        ipv4_address: 172.20.0.11
+        ipv4_address: 172.20.0.11  # Static IP for Django service
     restart: unless-stopped
 
+  # PgAdmin4 web interface for managing PostgreSQL database
   pgadmin:
-    image: dpage/pgadmin4:8.2
+    image: dpage/pgadmin4:8.2  # Use PgAdmin4 version 8.2
     container_name: lbs_pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@lbs.local}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@lbs.local}      # Login email
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}           # Login password
+      PGADMIN_CONFIG_SERVER_MODE: 'False'                             # Single user mode
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'                # Disable master password
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - pgadmin_data:/var/lib/pgadmin  # Persistent storage for PgAdmin settings
     ports:
-      - "5050:80"
+      - "5050:80"  # Expose PgAdmin on port 5050 (maps to container's port 80)
     depends_on:
-      - db
+      - db  # Wait for database to start
     networks:
       lbs_network:
-        ipv4_address: 172.20.0.12
+        ipv4_address: 172.20.0.12  # Static IP for PgAdmin service
     restart: unless-stopped
 
+  # Nginx reverse proxy and web server
   nginx:
     build:
       context: .
-      dockerfile: docker/Dockerfile.nginx
+      dockerfile: docker/Dockerfile.nginx  # Build from custom Nginx Dockerfile
     container_name: lbs_nginx
     ports:
-      - "80:80"
+      - "80:80"  # Expose Nginx on port 80 (standard HTTP port)
     volumes:
-      - static_volume:/staticfiles
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/staticfiles  # Mount static files volume
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf  # Mount Nginx config
     depends_on:
-      - web
+      - web  # Wait for Django to start
     networks:
       lbs_network:
-        ipv4_address: 172.20.0.13
+        ipv4_address: 172.20.0.13  # Static IP for Nginx service
     restart: unless-stopped
 
+# Named volumes for data persistence
 volumes:
-  postgres_data:
-  pgadmin_data:
-  static_volume:
+  postgres_data:   # Stores PostgreSQL database files
+  pgadmin_data:    # Stores PgAdmin configuration and data
+  static_volume:   # Stores collected static files
