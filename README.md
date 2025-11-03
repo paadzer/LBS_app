@@ -25,7 +25,7 @@ Local Business Finder is a location-based services (LBS) web application that he
 *Searching for "Trinity Coffee" returns matching businesses*
 
 ### Responsive Design
-![Spatial Search](screenshots/spatial-search-markers.png)
+![Spatial Search](screenshots/responsiveness.png)
 *Page shrinks to fit the screen size*
 
 ### Business Details Popup
