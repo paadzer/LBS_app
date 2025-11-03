@@ -1,0 +1,311 @@
+Assignment Overview
+You are required to design, develop, and deploy a location-based services (LBS) application that demonstrates your understanding of spatial data management, web development, and optionally, a cloud deployment principles. This assignment verifies your ability to integrate multiple technologies into a functional, secure, and accessible web application.
+
+Learning Outcomes Assessed
+By completing this assignment, you will demonstrate your ability to:
+
+Design and implement spatial databases using PostgreSQL/PostGIS
+Develop web applications using the Model-View-Controller (MVC) architecture
+Create responsive, cross-platform user interfaces
+Integrate mapping services and spatial visualization
+Deploy applications to cloud infrastructure (optional)
+Apply security best practices in web application deployment
+ 
+
+Technical Requirements
+Mandatory Technologies
+1. Database Layer
+Database: PostgreSQL with PostGIS extension
+Management: CLI or PgAdmin4
+Requirements:
+Store and manipulate spatial data (points, lines, polygons)
+Implement at least 3 spatial queries (e.g., proximity search, containment, intersection)
+Properly indexed spatial columns
+2. Middle Tier
+Framework: Django (Python)
+Architecture: Model-View-Controller (MVC) pattern
+Requirements:
+RESTful API endpoints for spatial data operations
+Data validation and error handling
+User authentication (if applicable to your application)
+3. Front-End
+Interface: Responsive web application
+Framework Options: Bootstrap 5 (recommended), jQuery Mobile, Ionic, or similar
+Requirements:
+Works seamlessly on desktop, tablet, and mobile devices
+Intuitive user interface
+Accessible design (WCAG 2.1 AA compliance is encouraged)
+4. Mapping Component
+Library: Leaflet JS
+Tile Provider: OpenStreetMap
+Requirements:
+Interactive map with user controls (zoom, pan)
+Display spatial data with appropriate markers/polygons
+Custom map interactions (click events, popups, etc.)
+5. Deployment
+Environment: For this assignment, local deployment is sufficient
+Requirements:
+All components (Django, database and API access) should be fully functional in a local deployment (your PC or laptop).
+Bonus Challenge (+5 bonus marks, max total 30%)
+Local Docker Deployment:
+Create isolated network (custom subnet)
+Separate Docker images for: Django, PostGIS, PgAdmin4, Nginx
+Implement reverse proxy with Nginx
+Environment-based configuration management
+Production-ready security configurations
+ 
+
+Application Requirements
+Functional Requirements
+Your LBS application must:
+
+Store Spatial Data: Create, read, update, and delete (CRUD) operations on spatial entities
+Spatial Queries: Implement meaningful location-based functionality (e.g., “find nearest,” “within radius,” “points of interest”)
+Interactive Map: Display spatial data on an interactive map with user interaction capabilities
+Responsive Design: Function properly across different screen sizes and devices
+Data Persistence: Maintain data integrity across application restarts
+Application Ideas (Examples Only - Be Creative!)
+Campus navigation system with points of interest
+Local business finder with proximity search
+Public transport route visualizer
+Environmental monitoring stations map
+Community event locator
+Hiking trail planner
+Historical landmarks explorer
+Real estate property mapper
+Note: Your application should be original. While you may draw inspiration from existing services, direct cloning of classmates’ projects is not permitted.
+
+ 
+
+Submission Requirements
+1. GitHub Repository
+Submit a link to your GitHub repository containing:
+
+Complete source code with a clear directory structure
+README.md including:
+Application description and features
+Setup instructions (local and cloud deployment)
+Technology stack details
+Screenshot(s) of running application
+Known issues or limitations
+API documentation (if applicable)
+requirements.txt (Python dependencies)
+docker-compose.yml and Dockerfiles (if bonus is attempted)
+.env.example (environment variable template - no sensitive data)
+Database schema/migrations
+2. Local Deployment
+Present your deployed application during lab hour
+Ensure application is accessible and functional at time of assessment
+Include test credentials if authentication is required
+3. Documentation
+Brief user guide (can be in README or separate document)
+Architecture diagram showing component interactions
+Database schema documentation
+ 
+
+Assessment Rubric
+Database Layer (7 marks)
+Criteria
+
+Excellent (6-7)
+
+Good (4-5)
+
+Satisfactory (2-3)
+
+Needs Work (0-1)
+
+Database Design & Spatial Data
+
+PostGIS properly configured with well-designed schema. Multiple spatial data types used appropriately. Indexes implemented.
+
+PostGIS configured with appropriate schema. Basic spatial data storage working.
+
+PostGIS setup but schema needs improvement. Limited spatial functionality.
+
+Database issues or minimal spatial data implementation.
+
+Spatial Queries
+
+3+ complex spatial queries (proximity, intersection, buffering). Optimized and well-documented.
+
+2-3 spatial queries implemented and functional. Reasonable performance.
+
+1-2 basic spatial queries. Limited functionality.
+
+Minimal or non-functional spatial queries.
+
+Middle Tier - Django (7 marks)
+Criteria
+
+Excellent (6-7)
+
+Good (4-5)
+
+Satisfactory (2-3)
+
+Needs Work (0-1)
+
+MVC Architecture & API Design
+
+Clean MVC implementation. RESTful API with proper endpoints. Excellent code organization.
+
+MVC pattern followed. Functional API endpoints. Good code structure.
+
+Basic MVC structure. API functional but inconsistent.
+
+Poor structure or non-functional middleware.
+
+Data Handling & Validation
+
+Robust error handling, validation, and security practices. Proper data serialization.
+
+Good error handling and validation. Generally secure.
+
+Basic validation present. Some error handling gaps.
+
+Minimal validation or poor error handling.
+
+Front-End & User Interface (6 marks)
+Criteria
+
+Excellent (5-6)
+
+Good (3-4)
+
+Satisfactory (1-2)
+
+Needs Work (0)
+
+Responsive Design
+
+Excellent across all devices. Professional appearance. Intuitive UX.
+
+Works well on multiple devices. Clean design. Usable interface.
+
+Basic responsiveness. Some layout issues on certain devices.
+
+Not responsive or poor usability.
+
+Mapping Integration
+
+Sophisticated Leaflet implementation. Interactive features, custom styling, smooth performance.
+
+Functional map with basic interactivity. Spatial data properly displayed.
+
+Basic map display. Limited interactivity.
+
+Map not working or minimal functionality.
+
+Deployment (6 marks)
+Criteria
+
+Excellent (5-6)
+
+Good (3-4)
+
+Satisfactory (1-2)
+
+Needs Work (0-1)
+
+Implementation
+
+Complete setup. All services work. Proper networking and volumes. Production-ready.
+
+Services work. Basic configuration.
+
+Services partially implemented. Some services working.
+
+Minimal usage or not functional.
+
+Deployment
+
+Successfully deployed and accessible. Stable performance. Security considerations applied.
+
+Deployed and accessible. Generally stable.
+
+Deployed but with stability or access issues.
+
+Not deployed or inaccessible.
+
+Code Quality & Documentation (4 marks)
+Criteria
+
+Excellent (4)
+
+Good (3)
+
+Satisfactory (2)
+
+Needs Work (0-1)
+
+Code Quality, Documentation & Repository
+
+Excellent code organization, comments, and conventions. Comprehensive README and documentation. Clean Git history.
+
+Good code structure and documentation. README covers essentials. Reasonable Git usage.
+
+Basic documentation. Code needs better organization. Minimal Git usage.
+
+Poor code quality, missing documentation, or repository issues.
+
+BONUS: Advanced Docker Deployment (+5 marks maximum)
+Criteria
+
+Description
+
+Marks
+
+Advanced Configuration
+
+Custom network configuration, separate images for all components (Django, PostGIS, PgAdmin4, Nginx), reverse proxy implementation, production-grade security settings
+
+0-5
+
+Note: Bonus marks can bring your assignment score above 30%, but the maximum contribution to your module grade remains 30%.
+
+ 
+
+Important Notes
+Academic Integrity
+Your application must be your own original work
+Collaboration on concepts is acceptable, but code must be individually developed
+Proper attribution required for any external code snippets or libraries used
+Plagiarism will result in disciplinary action
+Assessment Focus
+This is a learning exercise. Marks are awarded for:
+
+- Reasonable and creative effort
+
+- Demonstration of understanding
+
+- Problem-solving approach
+
+- Technical implementation
+
+- Documentation quality
+
+Support & Resources
+Lecture materials (Weeks 1-6)
+Lab exercises and examples
+Office hours (upon request)
+Django documentation: https://docs.djangoproject.com/
+PostGIS documentation: https://postgis.net/documentation/
+Leaflet documentation: https://leafletjs.com/
+Late Submission Policy
+[Insert your institution’s late submission policy here]
+
+ 
+
+Submission Checklist
+Before submitting, ensure you have:
+
+☐ GitHub repository is public or instructor has been granted access
+☐ README.md is complete with setup instructions
+☐ Application is deployed and accessible via provided URL
+☐ Docker configuration files are included
+☐ Database migrations are included
+☐ No sensitive information (passwords, API keys) in repository
+☐ Code is properly commented
+☐ Repository link submitted via learning management system
+ 

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Local Business Finder - Find Businesses Near You{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+    <!-- Left Sidebar -->
+    <div class="col-12 col-lg-4">
+        <!-- Search Form -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="mb-0"><i class="bi bi-search me-2"></i>Search Businesses</h5>
+            </div>
+            <div class="card-body">
+                <form id="name-search-form" class="mb-3">
+                    <div class="mb-2">
+                        <label for="business-name" class="form-label fw-semibold">
+                            <i class="bi bi-building me-1"></i>Search by Name
+                        </label>
+                        <input type="text" class="form-control" id="business-name" name="name" 
+                               placeholder="e.g., Trinity Coffee">
+                        <small class="text-muted">Enter business name to search</small>
+                    </div>
+                    <button type="submit" class="btn btn-sm w-100 fw-bold" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border: none; color: white;">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </form>
+                <hr>
+                <form id="search-form">
+                    <div class="mb-3">
+                        <label for="latitude" class="form-label fw-semibold">
+                            <i class="bi bi-geo-alt me-1"></i>Find Nearby
+                        </label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text" style="font-size: 0.875rem;">Lat</span>
+                            <input type="number" step="any" class="form-control" id="latitude" name="lat" 
+                                   placeholder="53.3498" required>
+                        </div>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text" style="font-size: 0.875rem;">Lon</span>
+                            <input type="number" step="any" class="form-control" id="longitude" name="lon" 
+                                   placeholder="-6.2603" required>
+                        </div>
+                        <small class="text-muted">Click the map to auto-fill</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="radius" class="form-label fw-semibold">
+                            <i class="bi bi-circle me-1"></i>Radius (meters)
+                        </label>
+                        <input type="number" class="form-control" id="radius" name="radius" value="5000" min="100" max="50000">
+                        <small class="text-muted">Search within this distance</small>
+                    </div>
+                    <button type="submit" class="btn w-100 fw-bold" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                        <i class="bi bi-search me-2"></i>Find Nearby
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="card shadow-sm border-0 mt-3">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <h6 class="mb-0"><i class="bi bi-pin-map-fill me-2"></i>Search Results</h6>
+            </div>
+            <div class="card-body p-0">
+                <div id="nearest-list" class="p-3">
+                    <div class="text-center text-muted py-3">
+                        <i class="bi bi-info-circle me-2"></i>Click map or enter coordinates
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Map -->
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <h6 class="mb-0"><i class="bi bi-map me-2"></i>Interactive Map</h6>
+            </div>
+            <div class="card-body p-0">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
