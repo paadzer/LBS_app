@@ -17,19 +17,19 @@ Local Business Finder is a location-based services (LBS) web application that he
 ## 📸 Screenshots
 
 ### Main Application Interface
-![Main Interface](screenshots/main-interface.png)
+![Main Interface](screenshots/mainpage.png)
 *Clean, modern UI with search controls and interactive map*
 
 ### Business Search by Name
-![Name Search](screenshots/name-search-results.png)
+![Name Search](screenshots/searchfunction.png)
 *Searching for "Trinity Coffee" returns matching businesses*
 
-### Spatial Search with Results
+### Responsive Design
 ![Spatial Search](screenshots/spatial-search-markers.png)
-*Nearest 6 businesses displayed with numbered markers on the map*
+*Page shrinks to fit the screen size*
 
 ### Business Details Popup
-![Business Details](screenshots/business-popup.png)
+![Business Details](screenshots/informationcard.png)
 *Clicking a marker shows detailed business information*
 
 ## 🏗️ Technology Stack
